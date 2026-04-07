@@ -33,3 +33,38 @@ A modern desktop application featuring a "CustomTkinter" interface and Matplotli
 - **Dependencies:**
   ```bash
   pip install customtkinter matplotlib
+  Setup:
+
+Navigate to the Python directory.
+
+Run the script:
+  '''Bash'''
+  python nutri_hydra.py
+3. C++ Version (CLI)
+A high-performance command-line tool with a custom translation engine and progress-bar visualization.
+
+Requirements: A C++ compiler supporting C++11 or higher (GCC, Clang, or MSVC).
+
+Compilation:
+
+Bash
+# Example using G++
+g++ -o nutri_calc main.cpp
+Usage:
+
+Run the compiled executable:
+
+Bash
+./nutri_calc
+Follow the on-screen prompts to select your language and input data.
+
+📊 Nutritional Logic
+Water Intake: Calculated using weight-based algorithms (30-35ml/kg) plus dynamic sport offsets.
+
+Proteins: Optimized at 1.2g/kg for sedentary users and 1.6g/kg for active users.
+
+Fats: Standardized at 0.9g/kg following Mediterranean Diet guidelines.
+
+Carbohydrates: Balanced to provide the remaining energy requirements based on activity.
+
+Created with ❤️ for a healthier lifestyle.
