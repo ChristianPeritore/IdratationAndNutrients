@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutri-Hydra Calc Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg: #f4f7f9; --card: #ffffff; --text: #2c3e50; --primary: #3498db;
+            --surv-bg: #fff5f5; --surv-border: #e74c3c; --rec-bg: #f0fff4; --rec-border: #2ecc71;
+            --box-text: #2c3e50;
+        }
+        body.dark-mode {
+            --bg: #1a1a1a; --card: #2d2d2d; --text: #ecf0f1; --primary: #4fc3f7;
+            --surv-bg: #2d1a1a; --surv-border: #ff5252; --rec-bg: #1a2d1e; --rec-border: #66bb6a;
+            --box-text: #ffffff;
+        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); color: var(--text); transition: 0.3s; display: flex; justify-content: center; padding: 20px; }
+        .container { background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); max-width: 600px; width: 100%; }
+        
+        .header-tools { display: flex; justify-content: space-between; margin-bottom: 25px; align-items: center; flex-wrap: wrap; gap: 10px; }
+        select, input { padding: 10px; border-radius: 8px; border: 1px solid #ddd; background: var(--card); color: var(--text); outline: none; }
+        
+        .form-row { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .form-group { flex: 1; min-width: 120px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem; }
+        
+        .sport-section { border: 2px dashed #3498db55; padding: 15px; border-radius: 12px; margin: 20px 0; background: rgba(52, 152, 219, 0.03); }
+        button#calcBtn { width: 100%; padding: 14px; background-color: var(--primary); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 1.1rem; font-weight: bold; }
+        
+        #result { margin-top: 25px; display: none; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .res-box { padding: 15px; border-radius: 10px; border-left: 6px solid; color: var(--box-text); background: rgba(0,0,0,0.02); }
+        .res-box label { font-size: 0.70rem; text-transform: uppercase; font-weight: bold; display: block; margin-bottom: 5px; color: var(--primary); }
+        .res-box div { font-size: 1.4rem; font-weight: bold; }
+        .chart-container { margin-top: 30px; height: 350px; position: relative; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-tools">
+        <select id="langSelect" onchange="updateUI()">
+            <option value="it">Italiano 🇮🇹</option>
+            <option value="en">English 🇺🇸</option>
+            <option value="de">Deutsch 🇩🇪</option>
+            <option value="fr">Français 🇫🇷</option>
+            <option value="es">Español 🇪🇸</option>
+        </select>
+        <select id="unitSelect" onchange="updateUI()">
+            <option value="metric">Metric (kg/cm)</option>
+            <option value="imperial">Imperial (lb/in)</option>
+        </select>
+        <button onclick="document.body.classList.toggle('dark-mode')" style="cursor:pointer; background:none; border: 1px solid #ddd; border-radius: 8px; padding: 5px 10px; color: inherit;">🌓</button>
+    </div>
+
+    <h2 id="t-title">Nutri-Hydra Calc</h2>
+    
+    <div class="form-group">
+        <label id="t-name">Nome</label>
+        <input type="text" id="userName" placeholder="Es: Mario">
+    </div>
+
+    <div class="form-row">
+        <div class="form-group"><label id="t-age">Età</label><input type="number" id="age" value="30"></div>
+        <div class="form-group">
+            <label id="t-gender">Sesso</label>
+            <select id="gender" style="width:100%"><option value="m">M</option><option value="f">F</option></select>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label><span id="t-weight">Peso</span> (<span id="unitW">kg</span>)</label>
+            <input type="number" id="weight" value="70">
+        </div>
+        <div class="form-group">
+            <label><span id="t-height">Altezza</span> (<span id="unitH">cm</span>)</label>
+            <input type="number" id="height" value="175">
+        </div>
+    </div>
+
+    <div class="sport-section">
+        <label style="cursor:pointer; display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" id="sportActive" onchange="toggleSportInputs()"> 
+            <span id="t-doSport">Pratico Sport</span>
+        </label>
+        <div id="sportInputs" style="display:none; margin-top:15px;">
+            <input type="text" id="sportName" placeholder="Sport name" style="width:100%; margin-bottom:10px;">
+            <div class="form-row">
+                <div class="form-group"><label id="t-freq">Volte/Sett</label><input type="number" id="sportFreq" value="3"></div>
+                <div class="form-group"><label id="t-hours">Ore/Sess</label><input type="number" id="sportHours" value="1"></div>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="calculateAll()" id="calcBtn">Calcola</button>
+
+    <div id="result">
+        <h3 id="resGreeting"></h3>
+        <p id="sub-water-text" style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 20px;"></p>
+
+        <div class="res-grid">
+            <div class="res-box" style="border-color: var(--surv-border); background: var(--surv-bg);">
+                <label id="t-minSurv">Minimo per sopravvivere</label>
+                <div id="resMin"></div>
+            </div>
+            <div class="res-box" style="border-color: var(--rec-border); background: var(--rec-bg);">
+                <label id="t-recMed">Raccomandato Dieta Mediterranea</label>
+                <div id="resRec"></div>
+            </div>
+            <div class="res-box"><label id="t-prot">Proteine</label><div id="resProt"></div></div>
+            <div class="res-box"><label id="t-fats">Grassi</label><div id="resFats"></div></div>
+            <div class="res-box"><label id="t-fiber">Fibre</label><div id="resFiber"></div></div>
+            <div class="res-box"><label id="t-sugar">Carboidrati</label><div id="resCarbs"></div></div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="nutrientChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+let myChart = null;
+
+const translations = {
+    it: { title: "Nutri-Hydra Calc", name: "Nome", age: "Età", gender: "Sesso", weight: "Peso", height: "Altezza", doSport: "Pratico Sport", freq: "Volte/Sett", hours: "Ore/Sess", btn: "Calcola", minSurv: "Minimo per sopravvivere", recMed: "Raccomandato Dieta Mediterranea", waterFor: "Acqua necessaria per", hello: "Risultati per", prot: "Proteine", fats: "Grassi", fiber: "Fibre", sugar: "Carboidrati", water: "Acqua" },
+    en: { title: "Nutri-Hydra Calc", name: "Name", age: "Age", gender: "Gender", weight: "Weight", height: "Height", doSport: "I do sport", freq: "Times/Week", hours: "Hours/Sess", btn: "Calculate", minSurv: "Minimum to survive", recMed: "Mediterranean Diet Recommended", waterFor: "Water needed for", hello: "Results for", prot: "Proteins", fats: "Fats", fiber: "Fiber", sugar: "Carbs", water: "Water" },
+    de: { title: "Nutri-Hydra Calc", name: "Name", age: "Alter", gender: "Geschlecht", weight: "Gewicht", height: "Größe", doSport: "Sport treiben", freq: "Male/Woche", hours: "Std./Sitz", btn: "Berechnen", minSurv: "Minimum zum Überleben", recMed: "Mittelmeer-Diät Empfohlen", waterFor: "Wasserbedarf für", hello: "Ergebnisse für", prot: "Proteine", fats: "Fette", fiber: "Ballaststoffe", sugar: "Kohlenhydrate", water: "Wasser" },
+    fr: { title: "Nutri-Hydra Calc", name: "Nom", age: "Âge", gender: "Sexe", weight: "Poids", height: "Taille", doSport: "Je fais du sport", freq: "Fois/Sem", hours: "Heures/Sess", btn: "Calculer", minSurv: "Minimum pour survivre", recMed: "Recommandé Diète Méditerranéenne", waterFor: "Eau nécessaire pour", hello: "Résultats pour", prot: "Protéines", fats: "Lipides", fiber: "Fibres", sugar: "Glucides", water: "Eau" },
+    es: { title: "Nutri-Hydra Calc", name: "Nombre", age: "Edad", gender: "Género", weight: "Peso", height: "Altura", doSport: "Hacer deporte", freq: "Veces/Sem", hours: "Horas/Sess", btn: "Calcular", minSurv: "Mínimo para sobrevivir", recMed: "Recomendado Dieta Mediterránea", waterFor: "Agua necesaria para", hello: "Resultados para", prot: "Proteínas", fats: "Grasas", fiber: "Fibra", sugar: "Carbohidratos", water: "Agua" }
+};
+
+function updateUI() {
+    const l = document.getElementById('langSelect').value;
+    const u = document.getElementById('unitSelect').value;
+    const t = translations[l];
+
+    document.getElementById('unitW').innerText = u === 'metric' ? 'kg' : 'lb';
+    document.getElementById('unitH').innerText = u === 'metric' ? 'cm' : 'in';
+    
+    for (let key in t) {
+        let el = document.getElementById('t-' + key);
+        if (el) el.innerText = t[key];
+    }
+    document.getElementById('calcBtn').innerText = t.btn;
+    if(document.getElementById('result').style.display === 'block') calculateAll();
+}
+
+function toggleSportInputs() { 
+    document.getElementById('sportInputs').style.display = document.getElementById('sportActive').checked ? 'block' : 'none'; 
+}
+
+function calculateAll() {
+    const lang = document.getElementById('langSelect').value;
+    const unit = document.getElementById('unitSelect').value;
+    const t = translations[lang];
+    
+    let w = parseFloat(document.getElementById('weight').value);
+    const calcWeight = unit === 'imperial' ? w * 0.453592 : w;
+    const isSporty = document.getElementById('sportActive').checked;
+    const sportName = document.getElementById('sportName').value || "...";
+
+    let sportAddon = isSporty ? (parseFloat(document.getElementById('sportFreq').value || 0) * parseFloat(document.getElementById('sportHours').value || 0) * 0.7) / 7 : 0;
+    const waterRecLiters = (calcWeight * 0.035) + sportAddon;
+    const waterSurvLiters = (calcWeight * 0.025) + (sportAddon * 0.5);
+
+    const prot = calcWeight * (isSporty ? 1.6 : 1.2);
+    const fats = calcWeight * 0.9;
+    const carbs = calcWeight * 3.5;
+
+    const volUnit = unit === 'metric' ? 'L' : 'gal';
+    const volConv = unit === 'metric' ? 1 : 0.264172;
+
+    document.getElementById('resGreeting').innerText = `${t.hello} ${document.getElementById('userName').value || "User"}`;
+    document.getElementById('sub-water-text').innerText = `${t.waterFor} ${document.getElementById('userName').value || "User"} ${isSporty ? '& ' + sportName : ''}`;
+    
+    document.getElementById('resMin').innerText = `${(waterSurvLiters * volConv).toFixed(2)} ${volUnit}`;
+    document.getElementById('resRec').innerText = `${(waterRecLiters * volConv).toFixed(2)} ${volUnit}`;
+    document.getElementById('resProt').innerText = Math.round(prot) + " g";
+    document.getElementById('resFats').innerText = Math.round(fats) + " g";
+    document.getElementById('resFiber').innerText = "30 g";
+    document.getElementById('resCarbs').innerText = Math.round(carbs) + " g";
+
+    document.getElementById('result').style.display = 'block';
+    updateChart(t, prot, fats, carbs, waterRecLiters * 100);
+}
+
+function updateChart(t, p, f, c, w) {
+    const ctx = document.getElementById('nutrientChart').getContext('2d');
+    if (myChart) myChart.destroy();
+    
+    myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: [t.prot, t.fats, t.sugar, t.water],
+            datasets: [{
+                data: [p, f, c, w/10],
+                backgroundColor: ['#e74c3c', '#f1c40f', '#2ecc71', '#3498db']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { color: getComputedStyle(document.body).getPropertyValue('--text') } },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            let value = context.raw;
+                            let sum = context.dataset.data.reduce((a, b) => a + b, 0);
+                            let percentage = ((value * 100) / sum).toFixed(1) + "%";
+                            return label + ": " + percentage;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+updateUI();
+</script>
+
+</body>
+</html>
