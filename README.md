@@ -1,70 +1,61 @@
-# Nutri-Hydra Calc Pro 💧🍎
+# 🚀 Nutri-Hydra Calc Pro & CLI
 
-A comprehensive, multilingual tool designed to calculate daily water intake and nutritional requirements (Proteins, Fats, Carbohydrates, and Fiber) based on personal biometrics and physical activity levels.
-
-## 🌟 Features
-
-- **Multi-Platform:** Available in HTML/JS (Web), C++ (CLI), and Python (GUI).
-- **Internationalization:** Full support for 5 languages: English, Italian, German, French, and Spanish.
-- **Dual Unit System:** Seamlessly toggle between **Metric** (kg/cm/L) and **Imperial** (lb/in/gal) units.
-- **Visual Analytics:** Interactive pie charts (Web/Python) and progress bars (C++) to visualize macronutrient distribution.
-- **Smart Logic:** Adjusts recommendations based on age, gender, weight, and sport frequency/intensity.
-- **Dark Mode:** Optimized for eye comfort with modern dark themes.
+A high-precision, multilingual ecosystem designed to calculate daily hydration and nutritional requirements. Whether you prefer a sleek **Web Dashboard**, a high-performance **C++ Executable**, or a flexible **Python Script**, this project ensures you hit your health targets with style and precision.
 
 ---
 
-## 🛠 Installation & Usage
+## ✨ Features Across All Versions
 
-### 1. Web Version (HTML/JS)
-The easiest way to use the app. No installation required.
-
-- **Requirements:** Any modern web browser (Chrome, Firefox, Safari, Edge).
-- **Setup:**
-  1. Download the `index.html` file.
-  2. Open the file directly in your browser.
-  3. *Note: An active internet connection is required to load the Chart.js library via CDN.*
+* 💧 **Smart Hydration:** Dynamic calculation of "Minimum Survival" vs. "Recommended Mediterranean" water intake.
+* 🍎 **Macro Analytics:** Instant breakdown of Proteins, Fats, Carbohydrates, and Fiber.
+* 🏃 **Activity Scaling:** Smart logic that adjusts requirements based on sport frequency and intensity.
+* 🌍 **Multi-Language:** Full support for **IT, EN, FR, DE, ES**.
+* ⚖️ **Multi-Unit:** Toggle instantly between **Metric** (kg/cm) and **Imperial** (lb/in).
+* 📊 **Data Visualization:** * **Web & Python:** Interactive Pie Charts.
+    * **C++:** Visual progress bars in the console.
 
 ---
 
-### 2. Python Version (GUI)
-A modern desktop application featuring a "CustomTkinter" interface and Matplotlib integration.
+## 🚀 How to Use
 
-- **Requirements:** Python 3.8+
-- **Dependencies:**
-  ```bash
-  pip install customtkinter matplotlib
-  Setup:
+### 1️⃣ Web Version (HTML/JS)
+*The quickest way to start. Zero installation required.*
+* **Requirements:** Any modern web browser.
+* **Setup:** Simply open `index.html` to launch the dashboard.
 
-Navigate to the Python directory.
+### 2️⃣ Python Version (GUI)
+*A modern desktop experience with native windowing.*
+* **Requirements:** Python 3.8+
+* **Dependencies:**
+    ```bash
+    pip install customtkinter matplotlib
+    ```
+* **Run:** `python nutri_hydra.py`
 
-Run the script:
-  '''Bash'''
-  python nutri_hydra.py
-3. C++ Version (CLI)
-A high-performance command-line tool with a custom translation engine and progress-bar visualization.
+### 3️⃣ C++ Version (CLI)
+*For those who value speed and minimal resource usage.*
+* **Build:**
+    ```bash
+    g++ -o nutri_calc main.cpp
+    ```
+* **Run:** `./nutri_calc`
 
-Requirements: A C++ compiler supporting C++11 or higher (GCC, Clang, or MSVC).
+---
 
-Compilation:
+## 📊 Nutritional Methodology
 
-Bash
-# Example using G++
-g++ -o nutri_calc main.cpp
-Usage:
+| Category | Logic Basis |
+| :--- | :--- |
+| **Hydration** | Base $30\text{--}35\text{ ml/kg}$ + dynamic activity offsets |
+| **Proteins** | Optimized from $1.2\text{ g/kg}$ to $1.6\text{ g/kg}$ for athletes |
+| **Fats** | Standardized at $0.9\text{ g/kg}$ (Mediterranean Diet standards) |
+| **Carbs** | Balanced against total TDEE and activity intensity |
 
-Run the compiled executable:
+---
 
-Bash
-./nutri_calc
-Follow the on-screen prompts to select your language and input data.
+## ⚖️ Disclaimer
+> [!WARNING]
+> The values provided are based on general nutritional guidelines. Always consult with a doctor or a registered dietitian before starting a new diet or exercise program.
 
-📊 Nutritional Logic
-Water Intake: Calculated using weight-based algorithms (30-35ml/kg) plus dynamic sport offsets.
-
-Proteins: Optimized at 1.2g/kg for sedentary users and 1.6g/kg for active users.
-
-Fats: Standardized at 0.9g/kg following Mediterranean Diet guidelines.
-
-Carbohydrates: Balanced to provide the remaining energy requirements based on activity.
-
-Created with ❤️ for a healthier lifestyle.
+---
+**Developed with ❤️ for a healthier world.**
